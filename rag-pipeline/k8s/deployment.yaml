@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+meta
+  name: rag-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rag-api
+  template:
+    meta
+      labels:
+        app: rag-api
+    spec:
+      containers:
+      - name: rag-api
+        image: rag-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        - name: vector-volume
+          mountPath: /app/vector_store
+      volumes:
+      - name: data-volume
+        emptyDir: {}
+      - name: vector-volume
+        emptyDir: {}

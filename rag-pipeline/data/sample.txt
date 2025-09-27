@@ -1,0 +1,3 @@
+Welcome to Rabeel-Ashraf's RAG Pipeline!
+This is a sample document.
+Add your .txt files to this directory.

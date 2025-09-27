@@ -1,0 +1,23 @@
+Retrieval-Augmented Generation (RAG) is an AI framework that combines the strengths of retrieval-based and generative models. 
+
+Key Benefits of RAG:
+1. **Up-to-date Information**: Unlike static LLMs, RAG can access current knowledge bases
+2. **Reduced Hallucinations**: Grounds responses in real documents rather than training data
+3. **Domain Specialization**: Can be tailored to specific industries like healthcare, finance, or legal
+4. **Cost Efficiency**: Cheaper than fine-tuning large models for specific use cases
+
+RAG Architecture Components:
+- **Document Store**: Contains your knowledge base (PDFs, text files, databases)
+- **Embedding Model**: Converts text to numerical vectors (e.g., all-MiniLM-L6-v2)
+- **Vector Database**: Enables fast similarity search (e.g., FAISS, Pinecone, Chroma)
+- **Retriever**: Finds relevant documents based on user queries
+- **Generator**: LLM that creates responses using retrieved context
+
+Best Practices for RAG Implementation:
+- Chunk documents appropriately (300-500 tokens)
+- Use metadata filtering for better precision
+- Implement caching for repeated queries
+- Monitor retrieval quality and relevance scores
+- Regularly update your knowledge base
+
+This RAG pipeline was built by Rabeel-Ashraf for high-performance, production-ready applications.

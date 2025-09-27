@@ -1,0 +1,9 @@
+fastapi==0.104.1
+uvicorn[standard]==0.23.2
+sentence-transformers==2.2.2
+transformers==4.30.2
+torch==2.0.1
+faiss-cpu==1.7.4
+redis==5.0.1
+pydantic-settings==2.0.0
+huggingface-hub==0.16.4
