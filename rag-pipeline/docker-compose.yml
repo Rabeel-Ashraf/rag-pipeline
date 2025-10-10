@@ -4,13 +4,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - REDIS_HOST=redis
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-openai}
+      - VECTOR_DB_PATH=/app/vectorstore
+      - MODEL_NAME=${MODEL_NAME:-gpt-4-turbo}
+      - EMBED_MODEL=${EMBED_MODEL:-text-embedding-3-large}
     volumes:
-      - ./data:/app/data
-      - ./vector_store:/app/vector_store
-    depends_on:
-      - redis
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
+      - ./vectorstore:/app/vectorstore
+    restart: unless-stopped

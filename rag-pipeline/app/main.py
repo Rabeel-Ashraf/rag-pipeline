@@ -1,35 +1,41 @@
 import os
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from contextlib import asynccontextmanager
-from .rag_engine import RAGEngine
-from .document_processor import DocumentProcessor
+import logging
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from .routes import upload, query, health
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    if not os.path.exists("/app/vector_store/index.faiss"):
-        processor = DocumentProcessor()
-        processor.process_directory()
-    global rag_engine
-    rag_engine = RAGEngine()
-    yield
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="Rabeel-Ashraf's RAG Pipeline",
-    lifespan=lifespan
+    title="Rabeel-Ashraf's Universal RAG Pipeline",
+    description="Production-ready RAG backend with OpenAI + DeepSeek fallback",
+    version="2.0.0"
 )
 
-class QueryRequest(BaseModel):
-    query: str
+# CORS middleware for Lovable/React frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.post("/query")
-async def query_rag(request: QueryRequest):
-    try:
-        results = await rag_engine.retrieve(request.query)
-        return {"results": results, "owner": "Rabeel-Ashraf"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# Include routers
+app.include_router(upload.router, prefix="/api")
+app.include_router(query.router, prefix="/api")
+app.include_router(health.router, prefix="/api")
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "owner": "Rabeel-Ashraf"}
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to Rabeel-Ashraf's Universal RAG Pipeline!",
+        "docs": "/docs",
+        "health": "/api/health"
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

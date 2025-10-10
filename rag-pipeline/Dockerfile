@@ -1,9 +1,23 @@
 FROM python:3.10-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    poppler-utils \
+    libmagic1 \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY . .
-RUN chmod +x scripts/ingest.sh
-RUN mkdir -p /app/vector_store
+
+# Create vectorstore directory
+RUN mkdir -p /app/vectorstore
+
 EXPOSE 8000
-CMD ["sh", "-c", "./scripts/ingest.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2"]
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
